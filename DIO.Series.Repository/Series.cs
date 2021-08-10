@@ -37,12 +37,27 @@ namespace DIO.Series.Repository
     
     public IEnumerable<Serie> GetAll(bool? onlyAvailables) => _seriesList.Where(x => onlyAvailables == true ? x.Available : true);
 
-    public IResponse Get(int id)
+    public IResponse Update(Serie serie)
     {
-      throw new NotImplementedException();
+      var response = new Response();
+      var errorMessage = CheckForErrorsToUpdate(serie);
+
+      var serieFound = _seriesList.FirstOrDefault(x => x.Id == serie.Id);
+      var serieByTitle = GetSerieByTitle(serie.Title);
+
+      if (string.IsNullOrWhiteSpace(errorMessage))
+      {
+        var indexSerieFound = _seriesList.IndexOf(serieFound);
+        _seriesList[indexSerieFound] = serie;
+      }
+
+      else
+        response.ErrorMessage = errorMessage;
+
+      return response;
     }
 
-    public IResponse Update(Serie serie)
+    public IResponse Get(int id)
     {
       throw new NotImplementedException();
     }
@@ -55,5 +70,25 @@ namespace DIO.Series.Repository
     public Serie GetSerieByTitle(string title) => _seriesList.FirstOrDefault(x => x.Title.ToLower().Trim() == title.ToLower().Trim());
 
     private int GetNextId() => _seriesList.Count + 1;
+
+    private string CheckForErrorsToUpdate(Serie serie)
+    {
+      var errorMessage = "";
+
+      var serieFound = _seriesList.FirstOrDefault(x => x.Id == serie.Id);
+
+      if (serieFound == null)
+        errorMessage = "Série não encontrada!";
+
+      else
+      {
+        var serieByTitle = GetSerieByTitle(serie.Title);
+
+        if (serieByTitle != null && serieByTitle.Id != serie.Id)
+          errorMessage = "Já existe uma série cadastrada com este título";
+      }
+
+      return errorMessage;
+    }
   }
 }
