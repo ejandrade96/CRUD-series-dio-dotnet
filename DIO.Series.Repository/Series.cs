@@ -34,13 +34,10 @@ namespace DIO.Series.Repository
 
       return response;
     }
+    
+    public IEnumerable<Serie> GetAll(bool? onlyAvailables) => _seriesList.Where(x => onlyAvailables == true ? x.Available : true);
 
     public IResponse Get(int id)
-    {
-      throw new NotImplementedException();
-    }
-
-    public IEnumerable<Serie> GetAll(bool? onlyAvailables)
     {
       throw new NotImplementedException();
     }
