@@ -2,7 +2,6 @@ using DIO.Series.Domain.Repository;
 using DIO.Series.Domain.Models;
 using System.Collections.Generic;
 using System.Linq;
-using System;
 
 namespace DIO.Series.Repository
 {
@@ -74,7 +73,17 @@ namespace DIO.Series.Repository
 
     public IResponse Delete(int id)
     {
-      throw new NotImplementedException();
+      var response = new Response();
+
+      var serie = _seriesList.FirstOrDefault(x => x.Id == id);
+
+      if (serie == null)
+        response.ErrorMessage = "Série não encontrada!";
+
+      else
+        _seriesList.Remove(serie);
+
+      return response;
     }
 
     public Serie GetSerieByTitle(string title) => _seriesList.FirstOrDefault(x => x.Title.ToLower().Trim() == title.ToLower().Trim());
