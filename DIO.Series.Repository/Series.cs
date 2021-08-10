@@ -59,7 +59,17 @@ namespace DIO.Series.Repository
 
     public IResponse Get(int id)
     {
-      throw new NotImplementedException();
+      var response = new Response();
+
+      var serie = _seriesList.FirstOrDefault(x => x.Id == id);
+
+      if (serie == null)
+        response.ErrorMessage = "Série não encontrada!";
+
+      else
+        response.Result = serie;
+
+      return response;
     }
 
     public IResponse Delete(int id)
