@@ -1,5 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <ItemGroup>
+    <ProjectReference Include="..\DIO.Series.Domain\DIO.Series.Domain.csproj" />
+    <ProjectReference Include="..\DIO.Series.Repository\DIO.Series.Repository.csproj" />
+    
+  </ItemGroup>
+
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
