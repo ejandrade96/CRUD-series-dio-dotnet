@@ -62,8 +62,8 @@ namespace DIO.Series.Unit.Repository
     public void Deve_Listar_Todas_As_Series_Disponiveis()
     {
       var serie = new Serie("Mr. Robot", Genre.Drama, "Elliot é um jovem programador que trabalha como engenheiro de segurança virtual durante o dia", 2015, 4);
-      serie.MakeUnavailable();
       var serieUnavailable = new Serie("Treadstone", Genre.Acao, "Treadstone é uma série de televisão de drama de ação americana, conectada e baseada na série de filmes Bourne.", 2019, 1);
+      serieUnavailable.MakeUnavailable();
 
       _ = _series.Add(serie);
       _ = _series.Add(serieUnavailable);
@@ -71,6 +71,24 @@ namespace DIO.Series.Unit.Repository
       var availableSeries = _series.GetAll(true);
 
       availableSeries.Should().HaveCount(1);
+    }
+
+    [Fact]
+    public void Deve_Listar_Todas_As_Series_Indisponiveis()
+    {
+      var serie = new Serie("Mr. Robot", Genre.Drama, "Elliot é um jovem programador que trabalha como engenheiro de segurança virtual durante o dia", 2015, 4);
+      var serieUnavailable = new Serie("Treadstone", Genre.Acao, "Treadstone é uma série de televisão de drama de ação americana, conectada e baseada na série de filmes Bourne.", 2019, 1);
+      serieUnavailable.MakeUnavailable();
+      var serie2Unavailable = new Serie("Treadstone 2", Genre.Acao, "Treadstone é uma série de televisão de drama de ação americana, conectada e baseada na série de filmes Bourne.", 2019, 1);
+      serie2Unavailable.MakeUnavailable();
+
+      _ = _series.Add(serie);
+      _ = _series.Add(serieUnavailable);
+      _ = _series.Add(serie2Unavailable);
+
+      var availableSeries = _series.GetAll(false);
+
+      availableSeries.Should().HaveCount(2);
     }
 
     [Fact]

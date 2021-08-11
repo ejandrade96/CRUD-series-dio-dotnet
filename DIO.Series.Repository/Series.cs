@@ -33,8 +33,8 @@ namespace DIO.Series.Repository
 
       return response;
     }
-    
-    public IEnumerable<Serie> GetAll(bool? onlyAvailables) => _seriesList.Where(x => onlyAvailables == true ? x.Available : true);
+
+    public IEnumerable<Serie> GetAll(bool? onlyAvailables) => _seriesList.Where(x => onlyAvailables == null ? true : x.Available == onlyAvailables);
 
     public IResponse Update(Serie serie)
     {
@@ -75,7 +75,10 @@ namespace DIO.Series.Repository
         response.ErrorMessage = "Série não encontrada!";
 
       else
-        _seriesList.Remove(serie);
+      {
+        serie.MakeUnavailable();
+        Update(serie);
+      }
 
       return response;
     }
