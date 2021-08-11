@@ -38,20 +38,14 @@ namespace DIO.Series.Repository
 
     public IResponse Update(Serie serie)
     {
-      var response = new Response();
-      var errorMessage = CheckForErrorsToUpdate(serie);
+      var response = CheckForErrorsToUpdate(serie);
 
-      var serieFound = _seriesList.FirstOrDefault(x => x.Id == serie.Id);
-      var serieByTitle = GetSerieByTitle(serie.Title);
-
-      if (string.IsNullOrWhiteSpace(errorMessage))
+      if (string.IsNullOrWhiteSpace(response.ErrorMessage))
       {
-        var indexSerieFound = _seriesList.IndexOf(serieFound);
-        _seriesList[indexSerieFound] = serie;
+        var serieFoundById = response.Result;
+        var indexSerieFoundById = _seriesList.IndexOf(serieFoundById);
+        _seriesList[indexSerieFoundById] = serie;
       }
-
-      else
-        response.ErrorMessage = errorMessage;
 
       return response;
     }
@@ -90,24 +84,26 @@ namespace DIO.Series.Repository
 
     private int GetNextId() => _seriesList.Count + 1;
 
-    private string CheckForErrorsToUpdate(Serie serie)
+    private IResponse CheckForErrorsToUpdate(Serie serie)
     {
-      var errorMessage = "";
+      var response = new Response();
 
       var serieFound = _seriesList.FirstOrDefault(x => x.Id == serie.Id);
 
       if (serieFound == null)
-        errorMessage = "Série não encontrada!";
+        response.ErrorMessage = "Série não encontrada!";
 
       else
       {
         var serieByTitle = GetSerieByTitle(serie.Title);
 
         if (serieByTitle != null && serieByTitle.Id != serie.Id)
-          errorMessage = "Já existe uma série cadastrada com este título";
+          response.ErrorMessage = "Já existe uma série cadastrada com este título";
       }
 
-      return errorMessage;
+      response.Result = serieFound;
+
+      return response;
     }
   }
 }
